@@ -3,11 +3,13 @@
 
 
 
+import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 
 /*
@@ -22,6 +24,11 @@ import javax.swing.JFileChooser;
  */
 public class VentanaInicio extends javax.swing.JFrame {
     private boolean loginOk=false;
+    Textos textos = new Textos();
+    Imagenes imagenes = new Imagenes();
+    java.net.URL rutaIcono = VentanaInicio.class.getResource("iconos/png/icono_zeppellin.png");
+    
+    ImageIcon icono = new ImageIcon(rutaIcono, "");
     /**
      * Creates new form VentanaInicio
      */
@@ -48,6 +55,8 @@ public class VentanaInicio extends javax.swing.JFrame {
         btLogin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle(textos.Nombre()+" "+textos.Version());
+        setIconImages(null);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
