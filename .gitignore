@@ -9,6 +9,9 @@ Desktop.ini
 $RECYCLE.BIN/
 # Carpeta de credenciales
 credencial/
+# Ejecutables de Java
+*.jar
+
 # Windows Installer files
 *.cab
 *.msi
