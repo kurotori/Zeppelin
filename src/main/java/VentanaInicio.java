@@ -26,7 +26,7 @@ public class VentanaInicio extends javax.swing.JFrame {
     private boolean loginOk=false;
     Textos textos = new Textos();
     Imagenes imagenes = new Imagenes();
-    java.net.URL rutaIcono = VentanaInicio.class.getResource("iconos/png/icono_zeppellin.png");
+    java.net.URL rutaIcono = VentanaInicio.class.getResource("iconos/png/icono_zeppellin_16.png");
     
     ImageIcon icono = new ImageIcon(rutaIcono, "");
     /**
@@ -152,10 +152,10 @@ public class VentanaInicio extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
-        dq d1 = new dq();
+        InfoDrive d1 = new InfoDrive();
         String r= "";
         try{
-            r = d1.ListaArchivosDrive();
+            r = d1.ListaDirectoriosDrive(null);
         }
         catch(IOException e){
             r= e.getMessage();
@@ -204,12 +204,12 @@ public class VentanaInicio extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void btLoginMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btLoginMouseClicked
-        dq drive = new dq();
+        InfoDrive info = new InfoDrive();
         
         if(!loginOk){
             try {
-                String cuenta=drive.NombreCuenta();
-                String capacidad = drive.CapacidadCuenta();
+                String cuenta=info.NombreCuenta();
+                String capacidad = info.CapacidadCuenta();
                 btLogin.setText(cuenta);
                 loginOk=true;
                 texto1.append("\nConectado a "+cuenta);

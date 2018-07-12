@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 import java.security.CodeSource;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextArea;
@@ -18,39 +19,55 @@ import javax.swing.JTextArea;
 
 public class Archivos {
     
-    public void VerArchivos(){
-        File ubicacion = new File("D:\\");
-        if(ubicacion.isDirectory()){
-            //list all files on directory
-            String[] files = ubicacion.list();
-            
-            for(String s:files){
-		System.out.println(s);
-			}
-		}
+    File[] listaArchivos=new File[0];
+    /**
+     * Define la lista de archivos interna para su posterior proceso.
+     * @param archivos Un array de archivos
+     */
+    public void DefListaArchivos(File[] archivos){
+        listaArchivos=archivos;
     }
     
-    public String VerArchivos(File directorio){
-        String resultado="";
-        if(directorio.isDirectory()){
-            //list all files on directory
-            String[] files = directorio.list();
-            resultado= "Archivos en "+directorio.getAbsolutePath()+"\n";
-            resultado= resultado+"-----------------------------------\n";
-            for(String s:files){
-		resultado = resultado+s+"\n";
-			}
-		}
-        return resultado;
+    /**
+     * Devuelve la lista interna de archivos, que contiene los archivos para
+     * procesar
+     * @return El objeto listaArchivos
+     */
+    public File[] ListaArchivos(){
+        return listaArchivos;
     }
     
-    public File[] VerArchivos(File directorio,JTextArea panel){
+    /**
+     * Devuelve el número de archivos en la lista de archivos interna
+     * @return La cantidad de archivos en la lista interna
+     */
+    public int CantArchivos(){
+        return listaArchivos.length;
+    }
+    /**
+     * Vuelve a inicializar la lista interna de archivos, eliminando todos los
+     * archivos de la lista
+     */
+    public void LimpiarLista(){
+        listaArchivos=new File[0];
+    }
+    
+
+    /**
+     * Obtiene y muestra en un JTextAerea la lista de archivos de un directorio
+     * y la guarda en un array de tipo File
+     * @param directorio El objeto File con la ruta al directorio
+     * @param AreaTexto  El area de texto donde se deben mostrar los archivos del directorio
+     * @return Una lista/array con los archivos del directorio
+     */
+    public File[] VerArchivos(File directorio,JTextArea AreaTexto){
         String resultado="";
         File[] archivos;
         if(directorio.isDirectory()){
             //list all files on directory
-            String[] files = directorio.list();
             archivos=directorio.listFiles();
+            
+            String[] files = directorio.list();
             resultado= "Archivos en "+directorio.getAbsolutePath()+"\n";
             resultado= resultado+"-----------------------------------\n";
             for(String s:files){
@@ -61,9 +78,11 @@ public class Archivos {
             resultado="No es un directorio";
             archivos = new File[0];
         }
-        panel.setText(resultado);
+        AreaTexto.append("\n"+resultado);
         return archivos;
     }
+    
+    
     
     public void ChequearDirCredenciales(JTextArea panel){
 //        CodeSource codeSource = Inicio.class.getProtectionDomain().getCodeSource();
@@ -101,7 +120,7 @@ public class Archivos {
     public void SubirArchivo(File archivo, JTextArea panel){
         String texto="Se subirá el archivo "+archivo.getName()+" a Drive\n";
         panel.setText(texto);
-        dq drive = new dq();
+        GoogleDrive drive = new GoogleDrive();
         //File archivo = new File("ej.pdf");
         try {
             panel.setText(texto+drive.SubirArchivo(archivo));

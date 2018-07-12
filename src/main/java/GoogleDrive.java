@@ -31,9 +31,9 @@ import java.util.List;
  *
  * @author Sebastián de los Ángeles
  * @version 1.0
- * 
  */
-public class dq {
+public class GoogleDrive {
+    
     private static final Archivos arch = new Archivos();
     private static final String APPLICATION_NAME = "RespaldoDrive";
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
@@ -54,7 +54,7 @@ public class dq {
      */
     private static Credential getCredentials(final NetHttpTransport HTTP_TRANSPORT) throws IOException {
         // Load client secrets.
-        InputStream in = dq.class.getResourceAsStream(CLIENT_SECRET_DIR);
+        InputStream in = GoogleDrive.class.getResourceAsStream(CLIENT_SECRET_DIR);
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
 
         // Build flow and trigger user authorization request.
@@ -66,8 +66,13 @@ public class dq {
         System.out.println("-->"+flow.getTokenServerEncodedUrl());
         return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
     }
-
-    private Drive CrearServicio()throws IOException, GeneralSecurityException{
+    /**
+     * 
+     * @return El objeto necesario para ejecutar los servicios de drive, incluyendo la autorización
+     * @throws IOException
+     * @throws GeneralSecurityException 
+     */
+    public Drive CrearServicio()throws IOException, GeneralSecurityException{
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
@@ -75,53 +80,14 @@ public class dq {
         System.out.println("Iniciando servicio");
         
         return service;
-        
-    }
-    
-    public String NombreCuenta()throws IOException, GeneralSecurityException{
-        Drive servicio = CrearServicio();
-        String resultado="";
-        About datosCuenta=servicio.about().get().setFields("user, storageQuota").execute();
-        resultado=datosCuenta.getUser().getEmailAddress();
-        return resultado;
-    }
-    
-    public String CapacidadCuenta()throws IOException, GeneralSecurityException{
-        Numeros num = new Numeros();
-        Drive servicio = CrearServicio();
-        String resultado="";
-        About datosCuenta=servicio.about().get().setFields("user, storageQuota").execute();
-        long capUso = (datosCuenta.getStorageQuota().getUsageInDrive());
-        long capMax = datosCuenta.getStorageQuota().getLimit();
-        resultado=num.BytesAGiB(capUso)+" / "+num.BytesAGiB(capMax);
-        
-        return resultado;
     }
     
     
-    //public String ListaArchivosDrive(String busqueda)throws IOException, GeneralSecurityException{
-    public String ListaArchivosDrive()throws IOException, GeneralSecurityException{
-        String resultado="";
-        Drive servicio = CrearServicio();
-         FileList result = servicio.files().list()
-                .setPageSize(10)
-                .setFields("nextPageToken, files(name, size,mimeType)")
-                .setQ("mimeType = 'application/vnd.google-apps.folder'")//("name contains '"+busqueda+"'")
-                .execute();
-        List<File> files = result.getFiles();
-        
-        if (files == null || files.isEmpty()) {
-            resultado = "No files found.";
-        } else {
-            resultado = "Files:\n";
-            for (File file : files) {
-                
-                resultado= resultado + file.getName()+"\t"+file.getSize()+"\n";
-            }
-        }
+    
+    
+  
 
-        return resultado;
-    }
+    
     
     
 
@@ -151,7 +117,7 @@ public class dq {
     }
     
     public String SubirArchivo(java.io.File archivo)throws IOException, GeneralSecurityException{
-        String resultado="";
+        String resultado=null;
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport(); 
         Drive service = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
@@ -171,7 +137,7 @@ public class dq {
         .execute();
         resultado="Se subió el archivo "+nombre+"\n"
                 +"ID en Drive: "+file.getId();
-        //System.out.println("File ID: " + file.getId());
+        
         return resultado;
     }
 
